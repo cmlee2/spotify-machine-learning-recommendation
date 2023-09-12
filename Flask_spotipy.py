@@ -65,7 +65,8 @@ def login():
     return """
     /api/v1.0/artist <br>
     /api/v1.0/artist/popularity<br>
-    /api/v1.0/track/song-title"""
+    /api/v1.0/track/song-title<br>
+    /api/v1.0/trackrec/song/"""
 
 
 @app.route('/api/v1.0/<artist>')
@@ -268,6 +269,64 @@ def song_id(song):
 
     return jsonify(data)
 
+@app.route('/api/v1.0/trackrec/<song>/')
+def top_track_recs(song):
+
+
+    # create a Spotipy instance with the access token
+    sp = get_token()
+
+    song_id = sp.search(q=song, type = 'track', limit = 1)
+    song_id = song_id['tracks']['items'][0]['id']
+
+    hundred_recs = sp.recommendations(seed_tracks=[song_id], limit=100, country='US')
+    
+    hundred_recs = hundred_recs['tracks']
+
+    song_lists = song_rec_dict(hundred_recs)
+
+    top_rec_features = sp.audio_features(song_lists['song_id'])
+
+    # Create DataFrames
+    df_top_rec_audiofeatures = pd.DataFrame(top_rec_features)
+
+
+
+    # Create additional dataFrames and drop duplicates
+    df_top_rec_song_list = pd.DataFrame(song_lists['song_list'])
+    df_top_rec_song_list = df_top_rec_song_list.drop_duplicates(subset=['name']).reset_index(drop=True)
+
+    top_rec_df = pd.merge(df_top_rec_song_list, df_top_rec_audiofeatures, on ='id')
+    top_rec_df['duration_s'] = top_rec_df['duration_ms'] / 1000
+    top_rec_df = top_rec_df[[
+        'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
+        'instrumentalness','liveness','valence','tempo','duration_s']]
+
+    top_rec_songs = top_rec_df.values.tolist() 
+
+    top_rec_list = []
+
+
+    for song in top_rec_songs:
+        dict = {
+            "song": song[0],
+            "artist": song[1],
+            "popularity": song[2],
+            "danceability": song[3],
+            "energy": song[4],
+            "loudness": song[5],
+            "speechiness": song[6],
+            "acousticness": song[7],
+            "instrumentalness": song[8],
+            "liveness": song[9],
+            "valence":song[10],
+            "tempo": song[11],
+            "duration": song[12],
+        }
+        top_rec_list.append(dict)
+
+    data = top_rec_list
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(host = "0.0.0.0", port = 5501,debug=True)
