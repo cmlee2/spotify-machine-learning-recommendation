@@ -302,6 +302,52 @@ def top_track_recs(song):
     song_id = sp.search(q=song, type = 'track', limit = 1)
     song_id = song_id['tracks']['items'][0]['id']
 
+    track = sp.track(song_id)
+    track_dict = {
+    'name': track['name'],
+    'artist': track['album']['artists'][0]['name'],
+    'popularity': track['popularity'],
+    'uri': track['uri'],
+    'album':{
+        'album':track['album']['name'] ,
+        'album_photo':track['album']['images'][1]['url']
+    } 
+     
+    }
+    track_features = sp.audio_features([song_id])
+
+    track_df = pd.DataFrame([track_dict])
+    
+    track_features_df = pd.DataFrame(track_features)
+
+    track_final_df = pd.merge(track_df, track_features_df, on = 'uri')
+    track_final_df['duration_s'] = track_final_df['duration_ms']/1000
+    track_final_df = track_final_df[[
+        'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
+        'instrumentalness','liveness','valence','tempo','duration_s','album']]
+
+    track_final= track_final_df.values.tolist()
+    track_final_list = []
+
+    for song in track_final:
+        dict = {
+            "song": song[0],
+            "artist": song[1],
+            "popularity": song[2],
+            "danceability": song[3],
+            "energy": song[4],
+            "loudness": song[5],
+            "speechiness": song[6],
+            "acousticness": song[7],
+            "instrumentalness": song[8],
+            "liveness": song[9],
+            "valence":song[10],
+            "tempo": song[11],
+            "duration": song[12],
+            'album':song[13]
+        }
+        track_final_list.append(dict)
+
     hundred_recs = sp.recommendations(seed_tracks=[song_id], limit=100, country='US')
     
     hundred_recs = hundred_recs['tracks']
@@ -349,7 +395,7 @@ def top_track_recs(song):
         }
         top_rec_list.append(dict)
 
-    data = top_rec_list
+    data = [track_final_list, top_rec_list]
     return jsonify(data)
 
 if __name__ == '__main__':
