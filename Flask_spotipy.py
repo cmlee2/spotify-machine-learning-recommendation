@@ -247,7 +247,12 @@ def song_id(song):
     'name': track['name'],
     'artist': track['album']['artists'][0]['name'],
     'popularity': track['popularity'],
-    'uri': track['uri']
+    'uri': track['uri'],
+    'album':{
+        'album':track['album']['name'] ,
+        'album_photo':track['album']['images'][1]['url']
+    } 
+     
     }
     track_features = sp.audio_features([song_id])
 
@@ -259,7 +264,7 @@ def song_id(song):
     track_final_df['duration_s'] = track_final_df['duration_ms']/1000
     track_final_df = track_final_df[[
         'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
-        'instrumentalness','liveness','valence','tempo','duration_s']]
+        'instrumentalness','liveness','valence','tempo','duration_s','album']]
 
     track_final= track_final_df.values.tolist()
     track_final_list = []
@@ -279,6 +284,7 @@ def song_id(song):
             "valence":song[10],
             "tempo": song[11],
             "duration": song[12],
+            'album':song[13]
         }
         track_final_list.append(dict)    
 
@@ -317,7 +323,7 @@ def top_track_recs(song):
     top_rec_df['duration_s'] = top_rec_df['duration_ms'] / 1000
     top_rec_df = top_rec_df[[
         'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
-        'instrumentalness','liveness','valence','tempo','duration_s']]
+        'instrumentalness','liveness','valence','tempo','duration_s','album']]
 
     top_rec_songs = top_rec_df.values.tolist() 
 
@@ -339,6 +345,7 @@ def top_track_recs(song):
             "valence":song[10],
             "tempo": song[11],
             "duration": song[12],
+            'album_data': song[13]
         }
         top_rec_list.append(dict)
 
