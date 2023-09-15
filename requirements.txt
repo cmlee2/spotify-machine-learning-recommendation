@@ -1,12 +1,5 @@
-
 pandas
-flask_cors
 spotipy
 flask
-dotenv
-os
 flask_cors
-spotipy.oauth2
-sklearn.cluster
-sklearn.decomposition 
-sklearn.preprocessing 
+scikit-learn

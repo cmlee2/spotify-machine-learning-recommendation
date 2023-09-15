@@ -6,20 +6,18 @@ import pandas as pd
 from flask_cors import CORS
 import spotipy
 from flask import Flask,jsonify
-from dotenv import load_dotenv
-import os
-from flask_cors import CORS
+# from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyClientCredentials
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 
-load_dotenv()
+# load_dotenv()
 
 def get_token():
-    cid = os.getenv("CLIENT_ID")
-    secret =  os.getenv("CLIENT_SECRET")
+    cid = "INSERT CLIENT ID HERE"
+    secret = "INSERT CLIENT SECRET HERE"
     client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
     return sp
