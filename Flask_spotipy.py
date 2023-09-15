@@ -349,7 +349,6 @@ def top_track_recs(song):
         }
         top_rec_list.append(dict)
 
-    data = top_rec_list
     return jsonify(data)
 
 if __name__ == '__main__':
