@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/eb87e0ee-dc31-4cf7-b4c9-c4afb3847162/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/spotipyMLapi",
+    "appService.deploySubpath": "."
+}

@@ -6,17 +6,18 @@ import pandas as pd
 from flask_cors import CORS
 import spotipy
 from flask import Flask,jsonify
-from dotenv import load_dotenv
-import os
-from flask_cors import CORS
+# from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyClientCredentials
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 
-load_dotenv()
+# load_dotenv()
 
 def get_token():
-    cid = os.getenv("CLIENT_ID")
-    secret =  os.getenv("CLIENT_SECRET")
+    cid = "INSERT CLIENT ID HERE"
+    secret = "INSERT CLIENT SECRET HERE"
     client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
     return sp
@@ -69,8 +70,7 @@ def login():
     return """
     /api/v1.0/artist <br>
     /api/v1.0/artist/popularity<br>
-    /api/v1.0/track/song-title<br>
-    /api/v1.0/trackrec/song/"""
+    /api/v1.0/trackrec/song"""
 
 
 @app.route('/api/v1.0/<artist>')
@@ -236,61 +236,6 @@ def top_recs(artist,popularity):
     data = top_rec_list
     return jsonify(data)
 
-@app.route('/api/v1.0/track/<song>')
-def song_id(song):
-    sp = get_token()
-    song_id = sp.search(q=song, type = 'track', limit = 1)
-    song_id = song_id['tracks']['items'][0]['id']
-
-    track = sp.track(song_id)
-    track_dict = {
-    'name': track['name'],
-    'artist': track['album']['artists'][0]['name'],
-    'popularity': track['popularity'],
-    'uri': track['uri'],
-    'album':{
-        'album':track['album']['name'] ,
-        'album_photo':track['album']['images'][1]['url']
-    } 
-     
-    }
-    track_features = sp.audio_features([song_id])
-
-    track_df = pd.DataFrame([track_dict])
-    
-    track_features_df = pd.DataFrame(track_features)
-
-    track_final_df = pd.merge(track_df, track_features_df, on = 'uri')
-    track_final_df['duration_s'] = track_final_df['duration_ms']/1000
-    track_final_df = track_final_df[[
-        'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
-        'instrumentalness','liveness','valence','tempo','duration_s','album']]
-
-    track_final= track_final_df.values.tolist()
-    track_final_list = []
-
-    for song in track_final:
-        dict = {
-            "song": song[0],
-            "artist": song[1],
-            "popularity": song[2],
-            "danceability": song[3],
-            "energy": song[4],
-            "loudness": song[5],
-            "speechiness": song[6],
-            "acousticness": song[7],
-            "instrumentalness": song[8],
-            "liveness": song[9],
-            "valence":song[10],
-            "tempo": song[11],
-            "duration": song[12],
-            'album':song[13]
-        }
-        track_final_list.append(dict)    
-
-    data = track_final_list
-
-    return jsonify(data)
 
 @app.route('/api/v1.0/trackrec/<song>/')
 def top_track_recs(song):
@@ -333,17 +278,6 @@ def top_track_recs(song):
         dict = {
             "song": song[0],
             "artist": song[1],
-            "popularity": song[2],
-            "danceability": song[3],
-            "energy": song[4],
-            "loudness": song[5],
-            "speechiness": song[6],
-            "acousticness": song[7],
-            "instrumentalness": song[8],
-            "liveness": song[9],
-            "valence":song[10],
-            "tempo": song[11],
-            "duration": song[12],
             'album':song[13]
         }
         track_final_list.append(dict)
@@ -371,31 +305,62 @@ def top_track_recs(song):
         'name','artist','popularity','danceability','energy','loudness','speechiness','acousticness',
         'instrumentalness','liveness','valence','tempo','duration_s','album']]
 
-    top_rec_songs = top_rec_df.values.tolist() 
+    top_rec_df = top_rec_df.set_index('name')
+    scaler = StandardScaler()
+    song_scaler = scaler.fit(top_rec_df[['acousticness', 'danceability', 'duration_s', 'energy',
+       'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness',
+       'tempo', 'valence']])
+    
+    song_data_scaled = song_scaler.transform(top_rec_df[['acousticness', 'danceability', 'duration_s', 'energy',
+       'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness',
+       'tempo', 'valence']])
+    
+    df_song_scaled = pd.DataFrame(song_data_scaled, columns= ['acousticness', 'danceability', 'duration', 'energy',
+       'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness',
+       'tempo', 'valence'])
+    
+    df_song_scaled['name'] = top_rec_df.index
+    df_song_scaled = df_song_scaled.set_index('name')
 
-    top_rec_list = []
+    model = KMeans(n_clusters=10)
+    model.fit(df_song_scaled)
+    song_clusters = model.predict(df_song_scaled)
+
+    df_song_predictions = df_song_scaled.copy()
+    df_song_predictions['cluster'] = song_clusters
+
+    new_song_data_scaled = song_scaler.transform(track_final_df[['acousticness', 'danceability', 'duration_s', 'energy',
+       'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness',
+       'tempo', 'valence']])
+    
+    new_df_song_scaled = pd.DataFrame(new_song_data_scaled, columns= ['acousticness', 'danceability', 'duration', 'energy',
+       'instrumentalness', 'liveness', 'loudness', 'popularity', 'speechiness',
+       'tempo', 'valence'])
+    
+    new_df_song_scaled['name'] = track_final_df.index
+    new_df_song_scaled = new_df_song_scaled.set_index('name')
+    prediction = model.predict(new_df_song_scaled)
+    predicted_songs = df_song_predictions.loc[df_song_predictions['cluster']==int(prediction)]
+
+    merged_list = pd.merge(predicted_songs, top_rec_df, how = 'left', on= 'name')
+    merged_list = merged_list.reset_index()
+    clustered_songs = merged_list.values.tolist() 
+
+    clustered_list = []
 
 
-    for song in top_rec_songs:
+    for song in clustered_songs:
+
         dict = {
-            "song": song[0],
-            "artist": song[1],
-            "popularity": song[2],
-            "danceability": song[3],
-            "energy": song[4],
-            "loudness": song[5],
-            "speechiness": song[6],
-            "acousticness": song[7],
-            "instrumentalness": song[8],
-            "liveness": song[9],
-            "valence":song[10],
-            "tempo": song[11],
-            "duration": song[12],
-            'album_data': song[13]
-        }
-        top_rec_list.append(dict)
+        'song': song[0],
+        'artist': song[13],
+        'album': song[25]
 
-    data = [track_final_list, top_rec_list]
+
+        }
+        clustered_list.append(dict)
+
+    data = [track_final_list, clustered_list]
     return jsonify(data)
 
 if __name__ == '__main__':
