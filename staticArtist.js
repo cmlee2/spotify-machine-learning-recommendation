@@ -36,6 +36,37 @@ function init() {
 console.log(url)
 }
 
+d3.selectAll("#selDataset").on("change", updatePlotly);
+
+function updatePlotly(){
+    let dropdownMenu = d3.select("#selDataset");
+
+    let dataset = dropdownMenu.property("value");
+
+    let x = []
+    let y = []
+
+    // var Array = jsonData[1];
+    // var ArrayPopularity = Array.map(function(song) {
+    //     return song.popularity;
+    // });
+    // var ArrayDanceability = Array.map(function(song){
+    //     return song.danceability
+    // });
+
+    if (dataset == 'dataset1') {
+        x = ArrayDanceability
+        y = ArrayPopularity
+    }
+
+    else if (dataset == 'dataset 2') {
+        x = ArrayPopularity
+        y = ArrayDanceability
+    }
+
+    Plotly.restyle("tempo-histogram", "x", [x]);
+    Plotly.restyle("tempo-histogram", "y", [y]);
+}
 function plotPopularityBarGraph(jsonData) {
     // Extract the first array from the JSON data
     var Array = jsonData[1];
