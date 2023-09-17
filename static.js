@@ -93,7 +93,7 @@ function plotDurationBarGraph(jsonData) {
             title: 'Popularity'
         },
         height:500,
-        width:600
+        width:700
     };
 
     // Plot the graph with the array of traces
@@ -187,7 +187,7 @@ function plotPopularityPieChart(jsonData) {
             title: 'Energy'
         },
         height:500,
-        width:600
+        width:700
     };
 
     // Plot the graph with the array of traces
@@ -253,7 +253,7 @@ function plotTempoHistogram(jsonData) {
             title: 'Popularity'
         },
         height: 500,
-        width: 600
+        width: 800
     };
 
     // Plot the graph with the array of traces
