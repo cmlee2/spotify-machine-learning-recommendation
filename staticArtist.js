@@ -159,8 +159,8 @@ function plotBubbleChart(jsonData) {
     // Create an array of traces where each trace represents a data point
     var traces = data.map(function(song) {
         return {
-            x: [song.energy], // X-coordinate
-            y: [song.tempo],   // Y-coordinate
+            x: [song.tempo], // X-coordinate
+            y: [song.energy],   // Y-coordinate
             text: [song.song], // Text for hover
             hovertemplate: '<b>Album Name:</b> ' + song.album_data.album_name + '<br><b>Album Release:</b> ' + song.album_data.album_release_date + '<br><b>Song:</b> ' + song.song,
             mode: 'markers',
@@ -213,7 +213,7 @@ function calculatePearsonCorrelationTE(jsonData) {
   
     const correlationCoefficient = sumOfDifferencesProduct / Math.sqrt(sumOfSquaredDifferenceX * sumOfSquaredDifferenceY);
 
-    document.getElementById("resultTE").textContent = `Pearson Correlation Coefficient For Valance and Popularity: ${correlationCoefficient.toFixed(2)}`;
+    document.getElementById("resultTE").textContent = `Pearson Correlation Coefficient For Tempo and Energy: ${correlationCoefficient.toFixed(2)}`;
 
   return correlationCoefficient;
   
