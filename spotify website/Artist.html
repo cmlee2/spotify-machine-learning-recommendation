@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Recommendation Visualization</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
@@ -34,24 +35,36 @@
     <div class="col-md-5">
         <div id="popularity-chart"></div>
       </div>
+      <div class="col-md-5">
+        <div id="gauge"></div>
+      </div>
     <div class="col-md-5">
         <div id="tempo-histogram"></div>
+        <!-- <h1>Pearson Correlation Calculator</h1> -->
+    
+        <!-- Result -->
+        <p id="resultDP"></p>
       </div>
-      <select id="selDataset">
+      <!-- <select id="selDataset">
         <option value="dataset1">DataSet1</option>
         <option value="dataset2">DataSet2</option>
-      </select>
+      </select> -->
     <div class="col-md-5">
         <div id="bubble-chart"></div>
+        <!-- <h1>Pearson Correlation Calculator</h1> -->
+    
+        <!-- Result -->
+        <p id="resultTE"></p>
       </div>
       <div class="col-md-5">
         <div id="radar-chart"></div>
       </div>
       <div class="col-md-5">
-        <div id="gauge"></div>
-      </div>
-      <div class="col-md-5">
         <div id="valance"></div>
+        <!-- <h1>Pearson Correlation Calculator</h1> -->
+    
+        <!-- Result -->
+        <p id="result"></p>
       </div>
 
      <style>
