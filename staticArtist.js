@@ -105,7 +105,7 @@ function plotTempoHistogram(jsonData) {
 
     // Create the layout for the scatter plot
     var layout = {
-        title: 'Correlation of Popularity and Danceability of Songs for ' + artistInput.value,
+        title: 'Correlation of Popularity and Duration of Songs for ' + artistInput.value,
         xaxis: {
             title: 'Duration'
         },
