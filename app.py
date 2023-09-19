@@ -322,7 +322,7 @@ def top_track_recs(song):
     df_song_scaled['name'] = top_rec_df.index
     df_song_scaled = df_song_scaled.set_index('name')
 
-    model = KMeans(n_clusters=10)
+    model = KMeans(n_clusters=4)
     model.fit(df_song_scaled)
     song_clusters = model.predict(df_song_scaled)
 
