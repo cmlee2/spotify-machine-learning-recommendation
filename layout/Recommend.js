@@ -57,9 +57,8 @@ function plotDurationBarGraph(jsonData) {
         };
     });
 
-    // Create the layout for the scatter plot
     var layout = {
-        title: 'Popularity and Duration of Songs for ' + artistInput.value,
+        title: { text:'Popularity and Duration of Songs for ' + artistInput.value,font: { size: 10}},
         xaxis: {
             title: 'Duration'
         },
@@ -124,7 +123,7 @@ function calculatePearsonCorrelationDP(jsonData) {
 
     
     var layout = {
-        title: 'Tempo and Energy of Songs for ' + artistInput.value,
+        title: { text:'Tempo and Energy of Songs for ' + artistInput.value,font: { size: 10}},
         xaxis: {
             title: 'Tempo'
         },
@@ -189,7 +188,7 @@ function calculatePearsonCorrelationTE(jsonData) {
     });
 
     var layout = {
-        title: 'Correlation of Popularity and Danceability of Songs for ' + artistInput.value,
+        title: { text:'Popularity and Danceability of Songs for ' + artistInput.value,font: { size: 10}},
         xaxis: {
             title: 'Danceability'
         },
@@ -253,7 +252,7 @@ function calculatePearsonCorrelationDD(jsonData) {
     var trace = {
         domain: {x:[0, 100], y:[0,100]},
         value: averageEnergy,
-        title: {text: "Average Energy for Recommendations Based on " + artistInput.value, font: {size:15}},
+        title: {text: "Average Energy for Recommendations Based on " + artistInput.value, font: {size:14}},
         type: "indicator",
         mode: "gauge+number",
          height: 600,

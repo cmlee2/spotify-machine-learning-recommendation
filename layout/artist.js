@@ -3,7 +3,6 @@ var chartH = 400;
 var chartW = 400;
 
 $(document).ready(function () {
-    // testvalues();
 
     $("#myButton").click(function () {
         loadPage();
