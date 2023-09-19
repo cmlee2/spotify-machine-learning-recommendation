@@ -67,7 +67,8 @@ function plotDurationBarGraph(jsonData) {
             title: 'Popularity'
         },
         height:chartH,
-        width:chartW
+        width:chartW,
+        showlegend:false
     };
 
     Plotly.newPlot('bar', traces, layout);
@@ -117,11 +118,11 @@ function calculatePearsonCorrelationDP(jsonData) {
             mode: 'markers',
             type: 'scatter',
             name: song.song,
-            text: [song.song] // Text for hover
+            text: [song.song] 
         };
     });
 
-    // Create the layout for the scatter plot
+    
     var layout = {
         title: 'Tempo and Energy of Songs for ' + artistInput.value,
         xaxis: {
@@ -131,7 +132,8 @@ function calculatePearsonCorrelationDP(jsonData) {
             title: 'Energy'
         },
         height:chartH,
-        width:chartW
+        width:chartW,
+        showlegend:false
     };
 
     
@@ -182,11 +184,10 @@ function calculatePearsonCorrelationTE(jsonData) {
             mode: 'markers',
             type: 'scatter',
             name: song.song,
-            text: [song.song] // Text for hover
+            text: [song.song] 
         };
     });
 
-    // Create the layout for the scatter plot
     var layout = {
         title: 'Correlation of Popularity and Danceability of Songs for ' + artistInput.value,
         xaxis: {
@@ -196,7 +197,8 @@ function calculatePearsonCorrelationTE(jsonData) {
             title: 'Popularity'
         },
         height: chartH,
-        width: chartW
+        width: chartW,
+        showlegend:false
     };
 
     

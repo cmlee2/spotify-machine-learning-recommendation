@@ -59,15 +59,12 @@ function artistfollowers() {
 }
 
 function plotPopularityBarGraph(jsonData) {
-    // Extract the first array from the JSON data
     var Array = jsonData[1];
 
-    // Extract the popularity values from the first array
     var popularityData = Array.map(function (song) {
         return song.popularity;
     });
 
-    // Extract the song names from the first array
     var songNames = Array.map(function (song) {
         return song.song;
     });
@@ -80,16 +77,14 @@ function plotPopularityBarGraph(jsonData) {
         return popularityData[songNames.indexOf(b)] - popularityData[songNames.indexOf(a)];
     });
 
-    // Create the trace for the bar graph
     var trace = {
         x: songNames,
         y: popularityData,
         type: 'bar'
     };
 
-    // Create the layout for the bar graph
     var layout = {
-        title: `Popularity of Songs for ` + artistInput.value, titlefont: { size: 17 },
+        title: `Popularity of Songs for ` + artistInput.value, titlefont: { size: 12 },
         xaxis: {
             title: 'Song'
         },
@@ -101,14 +96,12 @@ function plotPopularityBarGraph(jsonData) {
         width: chartW
     };
 
-    // Combine the trace and layout and plot the graph
     Plotly.newPlot('popularity-chart', [trace], layout);
 }
 
 function plotTempoHistogram(jsonData) {
-    var data = jsonData[1]; // Assuming data is an array of objects
+    var data = jsonData[1]; 
 
-    // Create an array of traces where each trace represents a data point
     var traces = data.map(function(song) {
         return {
             x: [song.duration], 
@@ -117,13 +110,12 @@ function plotTempoHistogram(jsonData) {
             mode: 'markers',
             type: 'scatter',
             name: song.song,
-            text: [song.song] // Text for hover
+            text: [song.song]
         };
     });
 
-    // Create the layout for the scatter plot
     var layout = {
-        title: 'Correlation of Popularity and Duration of Songs for ' + artistInput.value,
+        title: 'Correlation of Popularity and Duration of Songs for ' + artistInput.value,titlefont: { size: 12 },
         xaxis: {
             title: 'Duration'
         },
@@ -131,10 +123,10 @@ function plotTempoHistogram(jsonData) {
             title: 'Popularity'
         },
         height: chartH,
-        width: chartW
+        width: chartW,
+        showlegend:false
     };
 
-    // Plot the graph with the array of traces
     Plotly.newPlot('tempo-histogram', traces, layout);
 }
 function calculatePearsonCorrelationDP(jsonData) {
@@ -172,24 +164,21 @@ function calculatePearsonCorrelationDP(jsonData) {
   }
 
   function plotBubbleChart(jsonData) {
-    var data = jsonData[1]; // Assuming data is an array of objects
+    var data = jsonData[1]; 
 
-    // Create an array of traces where each trace represents a data point
     var traces = data.map(function(song) {
         return {
             x: [song.tempo], 
             y: [song.energy],   
-            text: [song.song], // Text for hover
+            text: [song.song],
             hovertemplate: '<b>Album Name:</b> ' + song.album_data.album_name + '<br><b>Album Release:</b> ' + song.album_data.album_release_date + '<br><b>Song:</b> ' + song.song,
             mode: 'markers',
             type: 'scatter',
             name: song.song
         };
     });
-
-    // Create the layout for the bubble chart
     var layout = {
-        title: 'Correlation of Energy and Tempo for ' + artistInput.value,
+        title: 'Correlation of Energy and Tempo for ' + artistInput.value,titlefont: { size: 12 },
         xaxis: {
             title: 'Tempo'
         },
@@ -197,10 +186,10 @@ function calculatePearsonCorrelationDP(jsonData) {
             title: 'Energy'
         },
         height: chartH,
-        width: chartW 
+        width: chartW,
+        showlegend:false
     };
 
-    // Plot the bubble chart with the array of traces
     Plotly.newPlot('bubble-chart', traces, layout);
 }
 
@@ -253,7 +242,7 @@ function plotGaugeChart(jsonData) {
     var trace = {
         domain: { x: [0, 100], y: [0, 100] },
         value: averageEnergy,
-        title: { text: "Average Popularity for " + artistInput.value, font: { size: 20 } },
+        title: { text: "Average Popularity for " + artistInput.value, font: { size: 14} },
         type: "indicator",
         mode: "gauge+number",
         gauge: {
@@ -278,24 +267,24 @@ function plotGaugeChart(jsonData) {
 }
 
 function plotValanceHistogram(jsonData) {
-    var data = jsonData[1]; // Assuming data is an array of objects
+    var data = jsonData[1]; 
 
-    // Create an array of traces where each trace represents a data point
+
     var traces = data.map(function(song) {
         return {
-            x: [song.valence], // X-coordinate
-            y: [song.tempo],   // Y-coordinate
+            x: [song.valence],
+            y: [song.tempo],   
             hovertemplate: '<b>Album Name:</b> ' + song.album_data.album_name + '<br><b>Album Release:</b> ' + song.album_data.album_release_date + '<br><b>Song:</b> ' + song.song,
             mode: 'markers',
             type: 'scatter',
             name: song.song,
-            text: [song.song] // Text for hover
+            text: [song.song] 
         };
     });
 
-    // Create the layout for the scatter plot
+
     var layout = {
-        title: 'Correlation of Valence and Tempo of Songs for ' + artistInput.value,
+        title: 'Correlation of Valence and Tempo of Songs for ' + artistInput.value, titlefont: { size: 12 },
         xaxis: {
             title: 'Valence'
         },
@@ -303,10 +292,11 @@ function plotValanceHistogram(jsonData) {
             title: 'Tempo'
         },
         height: chartH,
-        width: chartW
+        width: chartW,
+        showlegend:false
     };
 
-    // Plot the graph with the array of traces
+
     Plotly.newPlot('valance', traces, layout);
 }
 function calculatePearsonCorrelation(jsonData) {
