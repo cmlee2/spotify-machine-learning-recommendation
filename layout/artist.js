@@ -3,6 +3,7 @@ var chartH = 400;
 var chartW = 400;
 
 $(document).ready(function () {
+    // testvalues();
 
     $("#myButton").click(function () {
         loadPage();
@@ -156,7 +157,7 @@ function calculatePearsonCorrelationDP(jsonData) {
   
     const correlationCoefficient = sumOfDifferencesProduct / Math.sqrt(sumOfSquaredDifferenceX * sumOfSquaredDifferenceY);
 
-    document.getElementById("resultDP").textContent = `Pearson Correlation Coefficient For Duration and Popularity: ${correlationCoefficient.toFixed(2)}`;
+    document.getElementById("resultDP").textContent = `Correlation For Duration and Popularity: ${correlationCoefficient.toFixed(2)}`;
 
   return correlationCoefficient;
   
@@ -220,7 +221,7 @@ function calculatePearsonCorrelationTE(jsonData) {
   
     const correlationCoefficient = sumOfDifferencesProduct / Math.sqrt(sumOfSquaredDifferenceX * sumOfSquaredDifferenceY);
 
-    document.getElementById("resultTE").textContent = `Pearson Correlation Coefficient For Tempo and Energy: ${correlationCoefficient.toFixed(2)}`;
+    document.getElementById("resultTE").textContent = `Correlation For Tempo and Energy: ${correlationCoefficient.toFixed(2)}`;
 
   return correlationCoefficient;
   
@@ -260,7 +261,7 @@ function plotGaugeChart(jsonData) {
                 { range: [90, 100], color: "rgb(98,180,207)" },
 
             ]
-        }, size: 200
+        }
     }
     Plotly.newPlot("gauge", [trace], { height: chartH, width: chartW });
 }
@@ -326,7 +327,7 @@ function calculatePearsonCorrelation(jsonData) {
   
     const correlationCoefficient = sumOfDifferencesProduct / Math.sqrt(sumOfSquaredDifferenceX * sumOfSquaredDifferenceY);
 
-    document.getElementById("result").textContent = `Pearson Correlation Coefficient For Valance and Tempo: ${correlationCoefficient.toFixed(2)}`;
+    document.getElementById("result").textContent = `Correlation For Valance and Tempo: ${correlationCoefficient.toFixed(2)}`;
 
   return correlationCoefficient;
   
